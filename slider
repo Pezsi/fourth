@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jQuery Slider Demó</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  
+  #slider {
+    width: 900px; /* 3 kép szélessége */
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  }
+
+  .slide-container {
+    width: 1200px; /* Összes slide szélessége */
+    position: relative;
+    transition: left 0.5s ease-in-out;
+  }
+
+  .slide {
+    width: 300px;
+    float: left;
+  }
+
+  .slide img {
+    width: 100%;
+    display: block;
+    border: 0;
+  }
+
+  button {
+    padding: 10px 20px;
+    border: 0;
+    background: #333;
+    color: #fff;
+    margin: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+  }
+
+  button:hover {
+    background: #555;
+  }
+
+  .controls {
+    text-align: center;
+    padding-top: 10px;
+  }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="slider">
+  <div class="slide-container">
+    <!-- Itt cseréld le a képek útvonalát a saját képeidre -->
+    <div class="slide"><img src="slide1.jpg" alt="Slide 1" /></div>
+    <div class="slide"><img src="slide7.jpg" alt="Slide 2" /></div>
+    <div class="slide"><img src="slide3.jpg" alt="Slide 3" /></div>
+    <div class="slide"><img src="slide6.jpg" alt="Slide 4" /></div>
+  </div>
+</div>
+
+<div class="controls">
+  <button id="prev">❮ Előző</button>
+  <button id="next">Következő ❯</button>
+</div>
+
+<script>
+$(document).ready(function(){
+  var currentSlide = 0;
+  var slideWidth = $('.slide').width();
+  var numberOfSlides = $('.slide').length;
+  
+  $('.slide-container').css('left', 0);
+  
+  $('#next').click(function(){
+    currentSlide = Math.min(currentSlide + 1, numberOfSlides - 3);
+    $('.slide-container').animate({left: -currentSlide * slideWidth}, 'slow');
+  });
+  
+  $('#prev').click(function(){
+    currentSlide = Math.max(currentSlide - 1, 0);
+    $('.slide-container').animate({left: -currentSlide * slideWidth}, 'slow');
+  });
+});
+</script>
+
+</body>
+</html>
