@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jQuery Galéria</title>
+<style>
+  body { font-family: Arial, sans-serif; }
+  .gallery-container { display: flex; flex-wrap: wrap; gap: 10px; padding: 10px; }
+  .gallery-image:hover { transform: scale(1.05); }
+  .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); }
+  .modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 80%; max-height: 80%; }
+  .modal-content img { width: 100%; height: auto; }
+  .close { position: absolute; top: 20px; right: 30px; font-size: 40px; color: white; cursor: pointer; }
+  .gallery-image {
+  border: 3px solid #ddd;
+  border-radius: 5px;
+  width: auto; /* ez azért van, hogy megtartsa az arányait */
+  max-width: 100%; /* ez biztosítja, hogy a kép sose legyen nagyobb a tartályánál */
+  height: auto; /* ez azért van, hogy megtartsa az arányait */
+  max-height: 200px; /* ez korlátozza a kép magasságát */
+  cursor: pointer;
+  transition: transform 0.3s;
+  
+}
+.modal-content img {
+  width: 100%; /* A kép szélessége megegyezik a modal szélességével */
+  height: auto; /* A kép magassága automatikusan skálázódik, hogy megőrizze az arányait */
+  max-height: 100vh; /* A kép magassága nem haladhatja meg a nézet magasságát */
+  object-fit: contain; /* Ez biztosítja, hogy a kép teljesen látható legyen a konténerben, kényszertelenített arányokkal */
+}
+
+.gallery-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  justify-content: center; /* Középre igazítja a tartalmakat vízszintesen */
+  align-items: center; /* Középre igazítja a tartalmakat függőlegesen */
+}
+
+/* Ha csak vízszintesen szeretnéd középre igazítani, akkor az align-items tulajdonságot elhagyhatod. */
+
+
+</style>
+</head>
+<body>
+
+<div class="gallery-container">
+  <img src="slide1.jpg" alt="Kép 1" class="gallery-image" data-large="slide1.jpg">
+  <img src="slide2.jpg" alt="Kép 2" class="gallery-image" data-large="slide2.jpg">
+  <img src="slide3.jpg" alt="Kép 3" class="gallery-image" data-large="slide3.jpg">
+  <!-- További képek hozzáadhatók hasonlóan -->
+</div>
+
+<div id="myModal" class="modal">
+  <span class="close">&times;</span>
+  <div class="modal-content">
+    <img id="modal-image" src="">
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('.gallery-image').click(function() {
+    var largeImageSrc = $(this).attr('data-large');
+    $('#modal-image').attr('src', largeImageSrc);
+    $('#myModal').show();
+  });
+
+  $('.close').click(function() {
+    $('#myModal').hide();
+  });
+
+  $(window).click(function(e) {
+    if ($(e.target).is('#myModal')) {
+      $('#myModal').hide();
+    }
+  });
+});
+</script>
+
+</body>
+</html>
