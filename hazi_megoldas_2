@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galéria Házi Feladat</title>
+<style>
+  /* Galéria alapstílusok */
+  .gallery-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .gallery-image {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  
+  .gallery-image:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Modal stílusok */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  
+  .modal-content {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  #modal-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+  }
+  
+  /* Bezárás gomb */
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    z-index: 1001;
+  }
+  
+  /* Navigációs nyilak */
+  .nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: white;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1001;
+    transition: background-color 0.3s;
+  }
+  
+  .nav-arrow:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .prev {
+    left: 20px;
+  }
+  
+  .next {
+    right: 20px;
+  }
+  
+  /* Képszám kijelző */
+  .image-counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="gallery-container">
+  <img src="slide1.jpg" alt="Kép 1" class="gallery-image" data-large="slide1.jpg">
+  <img src="slide2.jpg" alt="Kép 2" class="gallery-image" data-large="slide2.jpg">
+  <img src="slide3.jpg" alt="Kép 3" class="gallery-image" data-large="slide3.jpg">
+</div>
+
+<div id="myModal" class="modal">
+  <span class="close">&times;</span>
+  <div class="modal-content">
+    <img id="modal-image" src="" alt="Nagy méretű kép">
+    <div class="nav-arrow prev">&lt;</div>
+    <div class="nav-arrow next">&gt;</div>
+    <div class="image-counter"><span id="current-index">1</span> / <span id="total-count">3</span></div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Képek tömbje a lapozáshoz
+  var images = [];
+  var currentIndex = 0;
+  var totalImages = $('.gallery-image').length;
+  
+  // Képek összegyűjtése
+  $('.gallery-image').each(function(index) {
+    images.push({
+      src: $(this).data('large'),
+      alt: $(this).attr('alt')
+    });
+  });
+  
+  // Képszámláló frissítése
+  $('#total-count').text(totalImages);
+  
+  // Modal megnyitása kép kattintásra
+  $('.gallery-image').click(function() {
+    currentIndex = $(this).index();
+    updateModalImage();
+    $('#myModal').fadeIn();
+  });
+  
+  // Modal bezárása
+  $('.close').click(function() {
+    $('#myModal').fadeOut();
+  });
+  
+  // Kattintás a háttérre bezárja a modalt
+  $('#myModal').click(function(event) {
+    if ($(event.target).is('#myModal')) {
+      $('#myModal').fadeOut();
+    }
+  });
+  
+  // Megakadályozza a modal bezárását, ha a képre kattintunk
+  $('#modal-image').click(function(event) {
+    event.stopPropagation();
+  });
+  
+  // Előző kép
+  $('.prev').click(function(event) {
+    event.stopPropagation();
+    currentIndex = (currentIndex - 1 + totalImages) % totalImages;
+    updateModalImage();
+  });
+  
+  // Következő kép
+  $('.next').click(function(event) {
+    event.stopPropagation();
+    currentIndex = (currentIndex + 1) % totalImages;
+    updateModalImage();
+  });
+  
+  // Billentyűzet navigáció
+  $(document).keydown(function(e) {
+    if ($('#myModal').is(':visible')) {
+      if (e.keyCode === 37) {
+        // Balra nyíl: előző kép
+        $('.prev').click();
+      } else if (e.keyCode === 39) {
+        // Jobbra nyíl: következő kép
+        $('.next').click();
+      } else if (e.keyCode === 27) {
+        // ESC: bezárás
+        $('#myModal').fadeOut();
+      }
+    }
+  });
+  
+  // Modal kép frissítése
+  function updateModalImage() {
+    $('#modal-image').attr('src', images[currentIndex].src);
+    $('#modal-image').attr('alt', images[currentIndex].alt);
+    $('#current-index').text(currentIndex + 1);
+  }
+});
+</script>
+
+</body>
+</html>
